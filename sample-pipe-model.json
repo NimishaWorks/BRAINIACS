@@ -1,0 +1,36 @@
+{
+  "pipes": [
+    {
+      "id": "pipe1",
+      "name": "Main Fuel Line",
+      "start": { "x": -2, "y": 0.5, "z": 0.8 },
+      "end": { "x": -1, "y": 0.8, "z": 0.8 },
+      "radius": 0.08,
+      "material": "steel"
+    },
+    {
+      "id": "pipe2",
+      "name": "Engine Connection",
+      "start": { "x": -1, "y": 0.8, "z": 0.8 },
+      "end": { "x": 0.5, "y": 0.8, "z": 0.8 },
+      "radius": 0.08,
+      "material": "rubber"
+    },
+    {
+      "id": "pipe3", 
+      "name": "Coolant Line",
+      "start": { "x": 0.5, "y": 0.8, "z": 0.8 },
+      "end": { "x": 1.5, "y": 0.6, "z": 0.6 },
+      "radius": 0.06,
+      "material": "copper"
+    },
+    {
+      "id": "pipe4",
+      "name": "Return Line",
+      "start": { "x": 1.5, "y": 0.6, "z": 0.6 },
+      "end": { "x": -1.8, "y": 0.4, "z": 0.7 },
+      "radius": 0.07,
+      "material": "aluminum"
+    }
+  ]
+}

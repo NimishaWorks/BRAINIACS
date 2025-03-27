@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Based Pipe Routing | PipeRouteAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/vr-mode.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-opacity-70 bg-gray-800 backdrop-filter backdrop-blur-lg border-b border-gray-700">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                        PipeRouteAI
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-blue-300 transition-colors">Home</a>
+                    <a href="routing.html" class="text-blue-400 hover:text-blue-300 transition-colors">Routing</a>
+                    <a href="analysis.html" class="text-gray-300 hover:text-blue-300 transition-colors">Analysis</a>
+                    <a href="comparison.html" class="text-gray-300 hover:text-blue-300 transition-colors">Comparison</a>
+                    <a href="settings.html" class="text-gray-300 hover:text-blue-300 transition-colors">Settings</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800 bg-opacity-95 backdrop-filter backdrop-blur-lg">
+            <div class="container mx-auto px-4 py-3">
+                <a href="index.html" class="block py-2 text-gray-300 hover:text-blue-300">Home</a>
+                <a href="routing.html" class="block py-2 text-blue-400">Routing</a>
+                <a href="analysis.html" class="block py-2 text-gray-300 hover:text-blue-300">Analysis</a>
+                <a href="comparison.html" class="block py-2 text-gray-300 hover:text-blue-300">Comparison</a>
+                <a href="settings.html" class="block py-2 text-gray-300 hover:text-blue-300">Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-16">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                AI-Based Pipe Routing
+            </h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Panel - Controls -->
+                <div class="lg:col-span-1">
+                    <div class="control-panel mb-8">
+                        <h2 class="text-xl font-bold mb-4 text-blue-300">Routing Parameters</h2>
+                        
+                        <!-- Text Prompt Input -->
+                        <div class="mb-6">
+                            <label for="prompt-input" class="block text-sm font-medium text-gray-400 mb-2">
+                                Describe Your Routing Needs
+                            </label>
+                            <textarea id="prompt-input" rows="4" placeholder="E.g., Route fuel pipes for an SUV with minimum length and avoiding the engine block..." class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"></textarea>
+                        </div>
+
+                        <!-- Vehicle Type Selection -->
+                        <div class="mb-6">
+                            <label for="vehicle-type" class="block text-sm font-medium text-gray-400 mb-2">
+                                Vehicle Type
+                            </label>
+                            <select id="vehicle-type" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                <option value="sedan">Sedan</option>
+                                <option value="suv">SUV</option>
+                                <option value="truck">Truck</option>
+                                <option value="sports">Sports Car</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+
+                        <!-- Pipe Type Selection -->
+                        <div class="mb-6">
+                            <label for="pipe-type" class="block text-sm font-medium text-gray-400 mb-2">
+                                Pipe System
+                            </label>
+                            <select id="pipe-type" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                <option value="fuel">Fuel System</option>
+                                <option value="cooling">Cooling System</option>
+                                <option value="brake">Brake Lines</option>
+                                <option value="hvac">HVAC</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+
+                        <!-- Optimization Priorities -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-400 mb-2">
+                                Optimization Priorities
+                            </label>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <label for="opt-length" class="text-gray-300">Minimize Length</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="opt-length" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label for="opt-bends" class="text-gray-300">Minimize Bends</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="opt-bends" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label for="opt-clearance" class="text-gray-300">Maximize Clearance</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="opt-clearance" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label for="opt-heat" class="text-gray-300">Avoid Heat Sources</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="opt-heat">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Generate Button -->
+                        <button id="generate-btn" class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 shadow-neon-blue">
+                            <i class="fas fa-magic mr-2"></i> Generate Routing
+                        </button>
+                    </div>
+
+                    <!-- Routing Stats -->
+                    <div class="control-panel" id="routing-stats" style="display: none;">
+                        <h2 class="text-xl font-bold mb-4 text-blue-300">Routing Statistics</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-400">Total Length</span>
+                                    <span class="text-white" id="stat-length">2.4 meters</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 65%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-400">Number of Bends</span>
+                                    <span class="text-white" id="stat-bends">8</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 40%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-400">Min. Clearance</span>
+                                    <span class="text-white" id="stat-clearance">5.2 cm</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-400">Optimization Score</span>
+                                    <span class="text-white" id="stat-score">87/100</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 87%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-gray-700">
+                            <h3 class="text-lg font-medium mb-3 text-blue-300">AI Recommendations</h3>
+                            <ul class="space-y-2 text-gray-300" id="ai-recommendations">
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-400 mt-1 mr-2"></i>
+                                    <span>Consider using reinforced rubber for the section near the exhaust manifold.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-400 mt-1 mr-2"></i>
+                                    <span>Adding a support bracket at bend #4 would improve stability.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - 3D Visualization -->
+                <div class="lg:col-span-2">
+                    <!-- 3D Visualization Container -->
+                    <div class="visualization-container mb-6" id="routing-canvas-container">
+                        <!-- Three.js canvas will be inserted here -->
+                        <div class="absolute inset-0 flex items-center justify-center" id="loading-indicator" style="display: none;">
+                            <div class="text-center">
+                                <div class="loading-spinner mx-auto mb-4"></div>
+                                <p class="text-blue-300">Generating optimal routing...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Route Options -->
+                    <div class="mb-6 flex space-x-4">
+                        <button id="route-option-1" class="route-option active flex-1" aria-pressed="true">
+                            <i class="fas fa-route mr-2"></i>Route Option 1
+                        </button>
+                        <button id="route-option-2" class="route-option flex-1" aria-pressed="false">
+                            <i class="fas fa-route mr-2"></i>Route Option 2
+                        </button>
+                    </div>
+
+                    <!-- Visualization Controls -->
+                    <div class="bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-lg p-4 border border-gray-700">
+                        <div class="flex flex-wrap gap-4">
+                            <!-- View Controls -->
+                            <div class="flex space-x-2">
+                                <button class="btn-outline view-btn active" data-view="3d">
+                                    <i class="fas fa-cube mr-1"></i> 3D
+                                </button>
+                                <button class="btn-outline view-btn" data-view="top">
+                                    <i class="fas fa-arrow-down mr-1"></i> Top
+                                </button>
+                                <button class="btn-outline view-btn" data-view="side">
+                                    <i class="fas fa-arrow-right mr-1"></i> Side
+                                </button>
+                                <button class="btn-outline view-btn" data-view="front">
+                                    <i class="fas fa-arrow-up mr-1"></i> Front
+                                </button>
+                            </div>
+
+                            <!-- Display Options -->
+                            <div class="flex space-x-2 ml-auto">
+                                <button class="btn-outline" id="toggle-vehicle">
+                                    <i class="fas fa-car mr-1"></i> Vehicle
+                                </button>
+                                <button class="btn-outline" id="toggle-obstacles">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> Obstacles
+                                </button>
+                                <button class="btn-outline" id="toggle-edit-mode">
+                                    <i class="fas fa-edit mr-1"></i> Edit Mode
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Edit Mode Controls (Hidden by default) -->
+                        <div id="edit-controls" class="mt-4 pt-4 border-t border-gray-700" style="display: none;">
+                            <div class="flex flex-wrap gap-4 items-center">
+                                <div>
+                                    <label for="edit-segment" class="block text-sm font-medium text-gray-400 mb-1">
+                                        Select Segment
+                                    </label>
+                                    <select id="edit-segment" class="bg-gray-800 border border-gray-700 rounded p-2 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                        <option value="1">Segment 1</option>
+                                        <option value="2">Segment 2</option>
+                                        <option value="3">Segment 3</option>
+                                        <option value="4">Segment 4</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="edit-diameter" class="block text-sm font-medium text-gray-400 mb-1">
+                                        Pipe Diameter
+                                    </label>
+                                    <input type="number" id="edit-diameter" min="0.5" max="10" step="0.1" value="2.0" class="bg-gray-800 border border-gray-700 rounded p-2 text-white w-24 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                </div>
+                                
+                                <div>
+                                    <label for="edit-material" class="block text-sm font-medium text-gray-400 mb-1">
+                                        Material
+                                    </label>
+                                    <select id="edit-material" class="bg-gray-800 border border-gray-700 rounded p-2 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                        <option value="rubber">Rubber</option>
+                                        <option value="steel">Steel</option>
+                                        <option value="aluminum">Aluminum</option>
+                                        <option value="copper">Copper</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="ml-auto">
+                                    <button class="btn-primary" id="apply-edit">
+                                        <i class="fas fa-check mr-1"></i> Apply Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-between mt-6">
+                        <button id="reset-btn" class="btn-outline">
+                            <i class="fas fa-redo mr-1"></i> Reset
+                        </button>
+                        
+                        <div class="space-x-3">
+                            <button id="save-btn" class="btn-outline">
+                                <i class="fas fa-save mr-1"></i> Save
+                            </button>
+                            <button id="stats-btn" class="btn-outline">
+                                <i class="fas fa-chart-bar mr-1"></i> Detailed Stats
+                            </button>
+                            <button id="analyze-btn" class="btn-primary">
+                                <i class="fas fa-chart-line mr-1"></i> Analyze Stresses
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                        PipeRouteAI
+                    </div>
+                    <p class="text-gray-500 mt-2">
+                        AI-Powered 3D Pipe Routing System for Automobiles
+                    </p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+                <p>© 2023 PipeRouteAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI Chat Assistant -->
+    <div id="ai-assistant" class="fixed bottom-6 right-6 z-50">
+        <button id="chat-toggle" class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300">
+            <i class="fas fa-robot text-white text-xl"></i>
+        </button>
+        <div id="chat-window" class="hidden absolute bottom-16 right-0 w-80 md:w-96 bg-gray-800 bg-opacity-95 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-700 shadow-2xl">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="font-bold text-blue-400">AI Assistant</h3>
+                <button id="close-chat" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chat-messages" class="p-4 h-80 overflow-y-auto">
+                <div class="mb-4">
+                    <div class="bg-blue-900 bg-opacity-50 rounded-lg p-3 inline-block max-w-xs">
+                        <p class="text-sm text-white">Hello! I'm your AI assistant. How can I help with your pipe routing project?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex">
+                    <input type="text" id="chat-input" placeholder="Ask me anything..." class="flex-1 bg-gray-700 border border-gray-600 rounded-l-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500">
+                    <button id="send-message" class="bg-blue-600 hover:bg-blue-700 rounded-r-lg px-4 text-white">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Statistics Modal -->
+    <div id="stats-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[1000] hidden items-center justify-center">
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <!-- Modal backdrop -->
+            <div class="fixed inset-0" aria-hidden="true">
+                <div class="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"></div>
+            </div>
+            
+            <!-- Modal content -->
+            <div class="bg-gray-800 rounded-lg w-11/12 max-w-4xl my-8 relative text-left shadow-xl transform transition-all">
+                <div class="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-blue-400">Detailed Statistics</h3>
+                    <button id="close-stats-modal" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                <!-- Stress Analysis -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold text-blue-300 mb-4">Stress Analysis</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Maximum Stress Points</h5>
+                            <div id="max-stress-points" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Stress Distribution</h5>
+                            <div id="stress-distribution" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Material Properties -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold text-blue-300 mb-4">Material Properties</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Material Specifications</h5>
+                            <div id="material-specs" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Temperature Effects</h5>
+                            <div id="temperature-effects" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow Analysis -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold text-blue-300 mb-4">Flow Analysis</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Flow Rates</h5>
+                            <div id="flow-rates" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Pressure Distribution</h5>
+                            <div id="pressure-distribution" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optimization Metrics -->
+                <div>
+                    <h4 class="text-lg font-semibold text-blue-300 mb-4">Optimization Metrics</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Performance Indicators</h5>
+                            <div id="performance-indicators" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h5 class="text-gray-300 mb-2">Cost Analysis</h5>
+                            <div id="cost-analysis" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/three-setup.js"></script>
+    <script src="js/routing-helpers.js"></script>
+    <script src="js/pipe-routing.js"></script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/gemini-api.js"></script>
+    <script src="js/vr-mode.js"></script>
+</body>
+</html>

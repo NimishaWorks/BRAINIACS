@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings & Export | PipeRouteAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-opacity-70 bg-gray-800 backdrop-filter backdrop-blur-lg border-b border-gray-700">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                        PipeRouteAI
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-blue-300 transition-colors">Home</a>
+                    <a href="routing.html" class="text-gray-300 hover:text-blue-300 transition-colors">Routing</a>
+                    <a href="analysis.html" class="text-gray-300 hover:text-blue-300 transition-colors">Analysis</a>
+                    <a href="settings.html" class="text-blue-400 hover:text-blue-300 transition-colors">Settings</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800 bg-opacity-95 backdrop-filter backdrop-blur-lg">
+            <div class="container mx-auto px-4 py-3">
+                <a href="index.html" class="block py-2 text-gray-300 hover:text-blue-300">Home</a>
+                <a href="routing.html" class="block py-2 text-gray-300 hover:text-blue-300">Routing</a>
+                <a href="analysis.html" class="block py-2 text-gray-300 hover:text-blue-300">Analysis</a>
+                <a href="settings.html" class="block py-2 text-blue-400">Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-16">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                Settings & Export
+            </h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Left Panel - Settings -->
+                <div>
+                    <div class="control-panel mb-8">
+                        <h2 class="text-xl font-bold mb-6 text-blue-300">Application Settings</h2>
+                        
+                        <!-- General Settings -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium mb-4 text-purple-300 border-b border-gray-700 pb-2">General Settings</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- Theme Setting -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Dark Theme</h4>
+                                        <p class="text-gray-400 text-sm">Use dark mode for the interface</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="theme-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Units Setting -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Measurement Units</h4>
+                                        <p class="text-gray-400 text-sm">Choose your preferred units</p>
+                                    </div>
+                                    <select id="units-select" class="bg-gray-800 border border-gray-700 rounded p-2 text-white w-32 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                        <option value="metric">Metric (mm)</option>
+                                        <option value="imperial">Imperial (in)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Performance Setting -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">High Performance Mode</h4>
+                                        <p class="text-gray-400 text-sm">Better visuals but requires more resources</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="performance-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Auto-Save Setting -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Auto-Save</h4>
+                                        <p class="text-gray-400 text-sm">Automatically save your work</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="autosave-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 3D Visualization Settings -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium mb-4 text-purple-300 border-b border-gray-700 pb-2">3D Visualization</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- Camera Speed -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <label for="camera-speed" class="text-white">Camera Speed</label>
+                                        <span class="text-gray-400" id="camera-speed-value">1.0</span>
+                                    </div>
+                                    <input type="range" id="camera-speed" min="0.1" max="3" step="0.1" value="1" 
+                                        class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                                
+                                <!-- Render Quality -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <label for="render-quality" class="text-white">Render Quality</label>
+                                        <span class="text-gray-400" id="render-quality-value">Medium</span>
+                                    </div>
+                                    <input type="range" id="render-quality" min="1" max="3" step="1" value="2" 
+                                        class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                                
+                                <!-- Pipe Segments -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Show Pipe Segments</h4>
+                                        <p class="text-gray-400 text-sm">Highlight individual pipe segments</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="segments-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Shadows -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Enable Shadows</h4>
+                                        <p class="text-gray-400 text-sm">More realistic but may affect performance</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="shadows-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Settings -->
+                        <div>
+                            <h3 class="text-lg font-medium mb-4 text-purple-300 border-b border-gray-700 pb-2">AI Settings</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- API Key -->
+                                <div>
+                                    <label for="api-key" class="block text-white mb-1">Gemini API Key</label>
+                                    <div class="flex">
+                                        <input type="password" id="api-key" value="AIzaSyB0BXc3hEp_AnU8ApaPxLFuCsMVCtTEecY" 
+                                            class="flex-1 bg-gray-800 border border-gray-700 rounded-l p-2 text-white focus:border-blue-500 focus:outline-none">
+                                        <button id="show-key" class="bg-gray-700 px-3 rounded-r border-t border-r border-b border-gray-700">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-gray-400 text-xs mt-1">Your API key is stored locally and never shared</p>
+                                </div>
+                                
+                                <!-- AI Response Detail -->
+                                <div>
+                                    <label for="ai-detail" class="block text-white mb-1">AI Response Detail</label>
+                                    <select id="ai-detail" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                        <option value="basic">Basic</option>
+                                        <option value="standard" selected>Standard</option>
+                                        <option value="detailed">Detailed</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- AI Assistant -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Enable AI Assistant</h4>
+                                        <p class="text-gray-400 text-sm">Show the AI chat assistant</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="assistant-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Export & Saved Designs -->
+                <div>
+                    <!-- Export Options -->
+                    <div class="control-panel mb-8">
+                        <h2 class="text-xl font-bold mb-6 text-blue-300">Export Options</h2>
+                        
+                        <!-- Current Project -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-3 text-purple-300">Current Project</h3>
+                            <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 border border-gray-700">
+                                <div class="flex justify-between items-center mb-3">
+                                    <div>
+                                        <h4 class="font-medium text-white">SUV Fuel System</h4>
+                                        <p class="text-gray-400 text-sm">Last modified: Today, 2:45 PM</p>
+                                    </div>
+                                    <span class="bg-green-900 bg-opacity-50 text-green-400 text-xs px-2 py-1 rounded">Active</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 mt-4">
+                                    <button class="btn-outline text-sm py-2">
+                                        <i class="fas fa-file-export mr-1"></i> Export as STL
+                                    </button>
+                                    <button class="btn-outline text-sm py-2">
+                                        <i class="fas fa-file-export mr-1"></i> Export as OBJ
+                                    </button>
+                                    <button class="btn-outline text-sm py-2">
+                                        <i class="fas fa-file-pdf mr-1"></i> Export Report
+                                    </button>
+                                    <button class="btn-outline text-sm py-2">
+                                        <i class="fas fa-file-code mr-1"></i> Export as JSON
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Export Settings -->
+                        <div>
+                            <h3 class="text-lg font-medium mb-3 text-purple-300">Export Settings</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- Export Quality -->
+                                <div>
+                                    <label for="export-quality" class="block text-white mb-1">Export Quality</label>
+                                    <select id="export-quality" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                        <option value="draft">Draft (Faster)</option>
+                                        <option value="standard" selected>Standard</option>
+                                        <option value="high">High Quality (Larger Files)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Include Vehicle -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Include Vehicle Model</h4>
+                                        <p class="text-gray-400 text-sm">Export with the vehicle model</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="include-vehicle-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Include Metadata -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-medium text-white">Include Metadata</h4>
+                                        <p class="text-gray-400 text-sm">Material info, dimensions, etc.</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="include-metadata-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Saved Designs -->
+                    <div class="control-panel">
+                        <h2 class="text-xl font-bold mb-6 text-blue-300">Saved Designs</h2>
+                        
+                        <div class="space-y-4">
+                            <!-- Design 1 -->
+                            <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 border border-gray-700">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-medium text-white">SUV Fuel System</h4>
+                                        <p class="text-gray-400 text-sm">Created: Today, 2:45 PM</p>
+                                        <p class="text-gray-500 text-xs mt-1">Optimization Score: 87/100</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-400 hover:text-red-400 transition-colors">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Design 2 -->
+                            <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 border border-gray-700">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-medium text-white">Sedan Cooling System</h4>
+                                        <p class="text-gray-400 text-sm">Created: Yesterday, 10:15 AM</p>
+                                        <p class="text-gray-500 text-xs mt-1">Optimization Score: 92/100</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-400 hover:text-red-400 transition-colors">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Design 3 -->
+                            <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 border border-gray-700">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-medium text-white">Truck Brake Lines</h4>
+                                        <p class="text-gray-400 text-sm">Created: 3 days ago</p>
+                                        <p class="text-gray-500 text-xs mt-1">Optimization Score: 78/100</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-400 hover:text-red-400 transition-colors">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Clear All Button -->
+                        <div class="mt-6 text-center">
+                            <button class="btn-outline text-sm py-2">
+                                <i class="fas fa-trash-alt mr-1"></i> Clear All Saved Designs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Save Settings Button -->
+            <div class="mt-8 text-center">
+                <button id="save-settings" class="btn-primary px-8 py-3">
+                    <i class="fas fa-save mr-2"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                        PipeRouteAI
+                    </div>
+                    <p class="text-gray-500 mt-2">
+                        AI-Powered 3D Pipe Routing System for Automobiles
+                    </p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+                <p>© 2023 PipeRouteAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI Chat Assistant -->
+    <div id="ai-assistant" class="fixed bottom-6 right-6 z-50">
+        <button id="chat-toggle" class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300">
+            <i class="fas fa-robot text-white text-xl"></i>
+        </button>
+        <div id="chat-window" class="hidden absolute bottom-16 right-0 w-80 md:w-96 bg-gray-800 bg-opacity-95 backdrop-filter backdrop-blur-lg rounded-lg border border-gray-700 shadow-2xl">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="font-bold text-blue-400">AI Assistant</h3>
+                <button id="close-chat" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chat-messages" class="p-4 h-80 overflow-y-auto">
+                <div class="mb-4">
+                    <div class="bg-blue-900 bg-opacity-50 rounded-lg p-3 inline-block max-w-xs">
+                        <p class="text-sm text-white">Hello! I'm your AI assistant. How can I help with your pipe routing project?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex">
+                    <input type="text" id="chat-input" placeholder="Ask me anything..." class="flex-1 bg-gray-700 border border-gray-600 rounded-l-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500">
+                    <button id="send-message" class="bg-blue-600 hover:bg-blue-700 rounded-r-lg px-4 text-white">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

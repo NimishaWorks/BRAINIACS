@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress & Pressure Analysis | PipeRouteAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-opacity-70 bg-gray-800 backdrop-filter backdrop-blur-lg border-b border-gray-700">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                        PipeRouteAI
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-blue-300 transition-colors">Home</a>
+                    <a href="routing.html" class="text-gray-300 hover:text-blue-300 transition-colors">Routing</a>
+                    <a href="analysis.html" class="text-blue-400 hover:text-blue-300 transition-colors">Analysis</a>
+                    <a href="comparison.html" class="text-gray-300 hover:text-blue-300 transition-colors">Comparison</a>
+                    <a href="settings.html" class="text-gray-300 hover:text-blue-300 transition-colors">Settings</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800 bg-opacity-95 backdrop-filter backdrop-blur-lg">
+            <div class="container mx-auto px-4 py-3">
+                <a href="index.html" class="block py-2 text-gray-300 hover:text-blue-300">Home</a>
+                <a href="routing.html" class="block py-2 text-gray-300 hover:text-blue-300">Routing</a>
+                <a href="analysis.html" class="block py-2 text-blue-400">Analysis</a>
+                <a href="comparison.html" class="block py-2 text-gray-300 hover:text-blue-300">Comparison</a>
+                <a href="settings.html" class="block py-2 text-gray-300 hover:text-blue-300">Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-16">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                Stress & Pressure Analysis
+            </h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Panel - 3D Visualization -->
+                <div class="lg:col-span-2">
+                    <!-- Model Upload and Visualization -->
+                    <div class="mb-4">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <input type="file" id="fileInput" accept=".json" class="hidden" />
+                            <label for="fileInput" class="btn-outline upload-btn cursor-pointer inline-flex items-center">
+                                <i class="fas fa-upload mr-2"></i>Upload Model
+                            </label>
+                            <button id="download-sample" class="btn-outline cursor-pointer inline-flex items-center">
+                                <i class="fas fa-download mr-2"></i>Download Sample
+                            </button>
+                            <span id="fileName" class="text-gray-400">No file chosen</span>
+                        </div>
+                        <div id="fileContent" class="bg-gray-800 p-4 rounded-lg hidden">
+                            <pre id="jsonContent" class="text-sm text-gray-300 whitespace-pre-wrap"></pre>
+                        </div>
+                    </div>
+
+                    <!-- 3D Visualization Container -->
+                    <div class="visualization-container mb-6" id="analysis-canvas-container">
+                        <!-- Three.js canvas will be inserted here -->
+                        <div class="absolute inset-0 flex items-center justify-center" id="loading-indicator" style="display: none;">
+                            <div class="text-center">
+                                <div class="loading-spinner mx-auto mb-4"></div>
+                                <p class="text-blue-300">Analyzing stress points...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualization Controls -->
+                    <div class="bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-lg p-4 border border-gray-700">
+                        <div class="flex flex-wrap gap-4">
+                            <!-- View Controls -->
+                            <div class="flex space-x-2">
+                                <button class="btn-outline view-btn active" data-view="3d">
+                                    <i class="fas fa-cube mr-1"></i> 3D
+                                </button>
+                                <button class="btn-outline view-btn" data-view="top">
+                                    <i class="fas fa-arrow-down mr-1"></i> Top
+                                </button>
+                                <button class="btn-outline view-btn" data-view="side">
+                                    <i class="fas fa-arrow-right mr-1"></i> Side
+                                </button>
+                                <button class="btn-outline view-btn" data-view="front">
+                                    <i class="fas fa-arrow-up mr-1"></i> Front
+                                </button>
+                            </div>
+
+                            <!-- Display Options -->
+                            <div class="flex space-x-2 ml-auto">
+                                <button class="btn-outline" id="toggle-vehicle">
+                                    <i class="fas fa-car mr-1"></i> Vehicle
+                                </button>
+                                <button class="btn-outline active" id="toggle-heatmap">
+                                    <i class="fas fa-fire mr-1"></i> Heatmap
+                                </button>
+                                <button class="btn-outline" id="toggle-labels">
+                                    <i class="fas fa-tags mr-1"></i> Labels
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Analysis Type Controls -->
+                        <div class="mt-4 pt-4 border-t border-gray-700">
+                            <div class="flex flex-wrap gap-4 items-center">
+                                <div>
+                                    <label for="analysis-type" class="block text-sm font-medium text-gray-400 mb-1">
+                                        Analysis Type
+                                    </label>
+                                    <select id="analysis-type" class="bg-gray-800 border border-gray-700 rounded p-2 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                        <option value="pressure">Pressure Analysis</option>
+                                        <option value="thermal">Thermal Analysis</option>
+                                        <option value="vibration">Vibration Analysis</option>
+                                        <option value="combined">Combined Analysis</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="operating-condition" class="block text-sm font-medium text-gray-400 mb-1">
+                                        Operating Condition
+                                    </label>
+                                    <select id="operating-condition" class="bg-gray-800 border border-gray-700 rounded p-2 text-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                        <option value="normal">Normal Operation</option>
+                                        <option value="high-load">High Load</option>
+                                        <option value="extreme">Extreme Conditions</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="ml-auto">
+                                    <button class="btn-primary" id="run-analysis">
+                                        <i class="fas fa-play mr-1"></i> Run Analysis
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Simulation Controls -->
+                        <div id="simulation-controls" class="mt-4 pt-4 border-t border-gray-700" style="display: none;">
+                            <div class="flex items-center space-x-4">
+                                <button id="pause-simulation" class="btn-outline">
+                                    <i class="fas fa-pause mr-1"></i> Pause
+                                </button>
+                                <button id="step-simulation" class="btn-outline">
+                                    <i class="fas fa-step-forward mr-1"></i> Step
+                                </button>
+                                <div class="flex items-center space-x-2">
+                                    <label for="simulation-speed" class="text-sm text-gray-400">Speed:</label>
+                                    <select id="simulation-speed" class="bg-gray-800 border border-gray-700 rounded p-1">
+                                        <option value="0.5">0.5x</option>
+                                        <option value="1.0" selected>1.0x</option>
+                                        <option value="2.0">2.0x</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div id="simulation-progress" class="mt-4">
+                                <!-- Simulation Status -->
+                                <div id="simulation-status" class="bg-gray-800 bg-opacity-70 rounded-lg p-2 border border-gray-700 mb-2">
+                                    <!-- Status content will be dynamically updated -->
+                                </div>
+                                
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm text-gray-400">Simulation Progress</span>
+                                    <span id="progress-percentage" class="text-sm text-gray-400 font-medium">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div id="progress-bar" class="progress-bar-fill transition-all duration-300 ease-in-out" style="width: 0%"></div>
+                                </div>
+                                <button onclick="exportSimulationData()" class="mt-4 w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center justify-center">
+                                    <i class="fas fa-file-excel mr-2"></i>
+                                    Export Simulation Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="mt-6 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-lg p-4 border border-gray-700">
+                        <h3 class="text-lg font-medium mb-3 text-blue-300">Stress Heatmap Legend</h3>
+                        <div class="flex items-center space-x-6">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                                <span class="text-gray-300">Low Stress</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                                <span class="text-gray-300">Medium Stress</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                                <span class="text-gray-300">High Stress</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>
+                                <span class="text-gray-300">Critical Point</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Analysis Results -->
+                <div class="lg:col-span-1">
+                    <div class="control-panel mb-8">
+                        <h2 class="text-xl font-bold mb-4 text-blue-300">Analysis Results</h2>
+                        
+                        <!-- Analysis Summary -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-3 text-purple-300">Summary</h3>
+                            <div id="analysis-summary">
+                                <!-- Summary content will be dynamically updated -->
+                                <p class="text-gray-300 mb-4">Upload a model and run analysis to see results.</p>
+                            </div>
+                        </div>
+
+                        <!-- Critical Points -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-3 text-red-300">Critical Points</h3>
+                            <ul class="space-y-3" id="critical-points-list">
+                                <!-- Critical points will be dynamically updated -->
+                            </ul>
+                        </div>
+
+                        <!-- AI Recommendations -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-3 text-blue-300">AI Recommendations</h3>
+                            <ul class="space-y-2 text-gray-300" id="ai-recommendations">
+                                <!-- Recommendations will be dynamically updated -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Material Suggestions -->
+                    <div class="control-panel">
+                        <h2 class="text-xl font-bold mb-4 text-blue-300">Material Suggestions</h2>
+                        <div id="material-suggestions" class="space-y-4">
+                            <!-- Material suggestions will be dynamically updated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                        PipeRouteAI
+                    </div>
+                    <p class="text-gray-500 mt-2">
+                        AI-Powered 3D Pipe Routing System for Automobiles
+                    </p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+                <p>© 2023 PipeRouteAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/three-setup.js"></script>
+    <script src="js/mock-data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/api-service.js"></script>
+    <script src="js/analysis.js"></script>
+</body>
+</html>
